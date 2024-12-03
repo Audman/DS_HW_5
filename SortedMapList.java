@@ -185,12 +185,20 @@ public class SortedMapList<E> implements List<E>
 
     public void add(int i, E e) throws IndexOutOfBoundsException {
         checkIndex(i);
+        if (get(i) != null)
+            for(Entry<Integer, E> entry: container.subMap(i, size()-1))
+                ((AbstractMap.MapEntry)entry).setKey(entry.getKey()+1); // Doesn't work on lazy iterator
+
         container.put(i, e);
     }
 
     public E remove(int i) throws IndexOutOfBoundsException {
         checkIndex(i);
-        return container.remove(i);
+        E returnValue = container.remove(i);
+        if (get(i) != null)
+            for(Entry<Integer, E> entry: container.subMap(i, size()-1))
+                ((AbstractMap.MapEntry)entry).setKey(entry.getKey()-1);
+        return returnValue;
     }
 
     public Iterator<E> iterator() {
@@ -208,18 +216,17 @@ public class SortedMapList<E> implements List<E>
 
         sml.add(0,'a');
         sml.add(1,'b');
-        sml.add(2,'c');
+        sml.add(2,'c'); // removed later
         sml.add(3,'d');
+        sml.add(1,'z'); // set e
 
         sml.remove(3);
 
         sml.set(1,'e');
 
         for(char c: sml)
-        {
             System.out.println(c);
-        }
 
-        // It works! (It worked until I didn't change the STM class)
+        // It works! (It worked until it  didn't)
     }
 }

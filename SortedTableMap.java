@@ -89,9 +89,8 @@ class SortedTableMap<K,V> extends AbstractSortedMap<K,V> {
     }
 
     public Iterable<Entry<K,V>> entrySet() { return new EntryIterable(); }
-
     public Iterable<Entry<K,V>> subMap(K fromKey, K toKey) throws IllegalArgumentException {
-        return new EntryIterable(fromKey, toKey);
+        return snapshot(findIndex(fromKey), toKey);
     }
 
     private class EntryIterable implements Iterable<Entry<K,V>>
