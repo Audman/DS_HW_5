@@ -110,8 +110,8 @@ public class HashMapSet<E extends Comparable<E>> implements Set<E> {
 
     private class ElementsIterator implements Iterator<E>
     {
-        E min = null; // In human language "from"
-        E max = null; // To
+        E min = null; // In human language: "from"
+        E max = null; // In human language: "to"
 
         // Lazy iterator, knows only "from" and "to" values
         // O(n) - explained inside the method

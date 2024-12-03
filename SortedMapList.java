@@ -220,5 +220,6 @@ public class SortedMapList<E> implements List<E>
             System.out.println(c);
         }
 
+        // It works! (It worked until I didn't change the STM class)
     }
 }

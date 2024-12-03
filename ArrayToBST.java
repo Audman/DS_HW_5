@@ -561,11 +561,25 @@ class AVLTree<K,V> extends LinkedBinaryTree<Entry<K,V>> {
     }
 }
 
-public class ArrayToBST<K,V> extends AVLTree<K,V>
+/*
+public class ArrayToBST<K,V>
 {
+    // Given an Integer array with strictly increasing numbers
+    // Constructs a LBT such that the resulting bla-bla-bla
+    // Has the smallest possible height.
+    // No restrictions about AVL
+
+    private static AVLTree avl;
+
+    public ArrayToBST()
+    {
+        avl = new AVLTree<>();
+    }
+
     public static <E> void constructTree (LinkedBinaryTree<E> tree , E [ ] data )
     {
-
+        for (E i : data)
+            avl.addRight(i);
     }
 
     private static <E> void constructTree (
@@ -576,5 +590,46 @@ public class ArrayToBST<K,V> extends AVLTree<K,V>
         E [ ] data )
     {
 
+    }
+}
+*/
+
+public class ArrayToBST
+{
+    // O(n) - these methods will be called once per element, plus once for every leaves
+    public static <E> void constructTree (LinkedBinaryTree<E> tree , E [ ] data )
+    {
+        if (data.length == 0) return;
+        int mid = (data.length-1)/2;
+
+        Position<E> root = tree.addRoot(data[mid]);
+        constructTree(tree, root, 0, mid-1, true, data);
+        constructTree(tree, root, mid+1, data.length-1, false, data);
+    }
+
+    private static <E> void constructTree (LinkedBinaryTree<E> tree, Position<E> parent , int start, int end , boolean left, E [ ] data )
+    {
+        if(start > end) return;
+
+        int mid = start + (end - start) / 2;
+
+        if(left) {
+            Position<E> root = tree.addLeft(parent, data[mid]);
+            constructTree(tree, root, start, mid-1, true, data);
+            constructTree(tree, root, mid+1, end, false, data);
+        }
+        else {
+            Position<E> root = tree.addRight(parent, data[mid]);
+            constructTree(tree, root, start, mid-1, true, data);
+            constructTree(tree, root, mid+1, end, false, data);
+        }
+    }
+
+    public static void main(String[] args) {
+        Integer [] array = new Integer [] {0,3,5,8, 10,50,60,75};
+        LinkedBinaryTree<Integer> lbt = new LinkedBinaryTree<>();
+        ArrayToBST.constructTree(lbt,array);
+        for (Position<Integer> pos : lbt.inorder())
+            System.out.print(pos.getElement() + " ");
     }
 }
