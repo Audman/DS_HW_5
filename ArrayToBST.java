@@ -623,10 +623,12 @@ public class ArrayToBST
     }
 
     public static void main(String[] args) {
-        Integer [] array = new Integer [] {0,3,5,8, 10,50,60,75};
+        Integer [] array = new Integer [] {0,3,5,8, 10,50,60,75,99};
         LinkedBinaryTree<Integer> lbt = new LinkedBinaryTree<>();
         ArrayToBST.constructTree(lbt,array);
         for (Position<Integer> pos : lbt.inorder())
             System.out.print(pos.getElement() + " ");
+
+        System.out.println("\nDelta: " + (array.length - lbt.height(lbt.root)));
     }
 }
