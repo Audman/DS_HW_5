@@ -88,43 +88,65 @@ class SortedTableMap<K,V> extends AbstractSortedMap<K,V> {
         return buffer;
     }
 
-    public Iterable<Entry<K,V>> entrySet() { return snapshot(0, null); }
+    public Iterable<Entry<K,V>> entrySet() { return new EntryIterable(); }
 
     public Iterable<Entry<K,V>> subMap(K fromKey, K toKey) throws IllegalArgumentException {
-        return snapshot(findIndex(fromKey), toKey);
+        return new EntryIterable(fromKey, toKey);
     }
 
     private class EntryIterable implements Iterable<Entry<K,V>>
     {
+        int from;
+        MapEntry<K,V> to;
+
+        public EntryIterable()
+        {
+            from = 0;
+            to = null;
+        }
+
+        public EntryIterable(K _from, K _to)
+        {
+            for(int i = 0; i < table.size(); i++)
+            {
+                K key = table.get(i).getKey();
+                if (key.equals(_from))
+                    from = i;
+                if (key.equals(_to)){
+                    to = table.get(i);
+                    break;
+                }
+            }
+        }
+
         public Iterator<Entry<K,V>> iterator() {
-            return new EntryIterator<Entry<K,V>>();
+            return new EntryIterator<>(from, to);
         }
     }
 
     private class EntryIterator<E> implements Iterator<E>
     {
-        int j;
-        MapEntry<K,V> z;
+        int from;
+        MapEntry<K,V> to;
 
         public EntryIterator()
         {
-            j = 0;
-            z = null;
+            from = 0;
+            to = null;
         }
 
-        public EntryIterator(int from, MapEntry<K,V> to)
+        public EntryIterator(int _from, MapEntry<K,V> _to)
         {
-            j = from;
-            z = to;
+            from = _from;
+            to = _to;
         }
 
         public boolean hasNext() {
-            return table.get(j+1) != z;
+            return table.get(from+1) != to;
         }
 
         public E next() {
-            return (E) table.get(j++);
+            return (E) table.get(from++);
         }
     }
-
 }
