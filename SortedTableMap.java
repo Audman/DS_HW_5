@@ -96,24 +96,24 @@ class SortedTableMap<K,V> extends AbstractSortedMap<K,V> {
 
     private class EntryIterable implements Iterable<Entry<K,V>>
     {
-        int from;
-        int to;
+        K from;
+        K to;
 
         public EntryIterable()
         {
-            from = 0;
-            to = table.size();
+            from = table.getFirst().getKey();
+            to = null;
         }
 
         public EntryIterable(K _from, K _to)
         {
-            for(int i = 0; i < table.size(); i++)
+            for(Entry<K,V> entry : table)
             {
-                K key = table.get(i).getKey();
+                K key = entry.getKey();
                 if (key.equals(_from))
-                    from = i;
+                    from = key;
                 if (key.equals(_to)){
-                    to = i;
+                    to = key;
                     break;
                 }
             }
@@ -126,29 +126,23 @@ class SortedTableMap<K,V> extends AbstractSortedMap<K,V> {
 
     private class EntryIterator<E> implements Iterator<E>
     {
-        int from;
-        int to;
+        K from;
+        K to;
 
-        public EntryIterator()
-        {
-            from = 0;
-            to = table.size();
-        }
-
-        public EntryIterator(int _from, int _to)
+        public EntryIterator(K _from, K _to)
         {
             from = _from;
             to = _to;
         }
 
         public boolean hasNext() {
-            return from+1 != to;
+            return higherEntry(from) != to;
         }
 
         public E next() {
-            Entry<K,V> higher = higherEntry(table.get(from).getKey());
-            from =0;////!!!!
-            return (E) higherEntry(table.get(from).getKey());
+            K temp = from;
+            from = higherEntry(from).getKey();
+            return (E) ceilingEntry(temp);
         }
     }
 }
