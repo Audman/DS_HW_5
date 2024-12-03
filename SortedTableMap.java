@@ -147,7 +147,7 @@ class SortedTableMap<K,V> extends AbstractSortedMap<K,V> {
 
         public E next() {
             Entry<K,V> higher = higherEntry(table.get(from).getKey());
-            from = 
+            from =0;////!!!!
             return (E) higherEntry(table.get(from).getKey());
         }
     }

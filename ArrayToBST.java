@@ -613,16 +613,13 @@ public class ArrayToBST
 
         int mid = start + (end - start) / 2;
 
-        if(left) {
-            Position<E> root = tree.addLeft(parent, data[mid]);
-            constructTree(tree, root, start, mid-1, true, data);
-            constructTree(tree, root, mid+1, end, false, data);
-        }
-        else {
-            Position<E> root = tree.addRight(parent, data[mid]);
-            constructTree(tree, root, start, mid-1, true, data);
-            constructTree(tree, root, mid+1, end, false, data);
-        }
+        Position<E> root;
+        if(left)
+            root = tree.addLeft(parent, data[mid]);
+        else
+            root = tree.addRight(parent, data[mid]);
+        constructTree(tree, root, start, mid-1, true, data);
+        constructTree(tree, root, mid+1, end, false, data);
     }
 
     public static void main(String[] args) {
